@@ -115,7 +115,6 @@ fun ExpenseCategorySheet(
                 },
                 onValueChange = {
                     newCategoryText = it
-                    onSearchChanged(it)
                 })
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(
