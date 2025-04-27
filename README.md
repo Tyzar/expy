@@ -12,6 +12,12 @@ Expy is a lightweight, intuitive Android app to track your daily expenses — bu
 - Offline-first support with Room Database.
 - Modular and maintainable project structure.
 
+<img src="https://github.com/user-attachments/assets/0839aa1e-79d0-4b01-b0fa-bae094b697fb" width="200" alt="Expy Home Screen"/>
+<img src="https://github.com/user-attachments/assets/2d2e3f0f-3ab9-4c4c-91e8-543d8194fb84" width="200" alt="Expy Edit"/>
+<img src="https://github.com/user-attachments/assets/2b9d4e57-198d-427b-94c7-7f3e03d278e8" width="200" alt="Expy Multi Delete" />
+<img src="https://github.com/user-attachments/assets/ec1feb2d-3a22-4a71-a1d0-c94a85cd453e" width="200" alt="Expy Category" />
+
+
 ## 🛠️ Tech Stack
 
 - UI Jetpack Compose powered by Material You
@@ -51,5 +57,6 @@ This project is licensed under the MIT License.
 ## 👨‍💻 Author
 Tyzar
 
-Ready to track your expenses smarter?
+#### *Ready to track your expenses smarter?*
+
 ⭐️ Star the repo if you like it!
