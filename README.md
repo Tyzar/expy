@@ -6,7 +6,7 @@ Expy is a lightweight, intuitive Android app to track your daily expenses — bu
 
 ## ✨ Features
 
-- Add, view, update and manage expenses easily.
+- Add, view, and manage expenses easily.
 - Categorize your spending efficiently.
 - Beautiful, responsive UI with Jetpack Compose.
 - Offline-first support with Room Database.
@@ -26,11 +26,8 @@ Expy is a lightweight, intuitive Android app to track your daily expenses — bu
 - Handle asynchronous process with Coroutine
 - Dependency Injection Hilt
 
-## 🏛️ Architecture Overview
-Expy follows Clean Architecture principles:
-
 ### 🧹 SOLID Principles in Action
-- **S**ingle Responsibility: Clear separation of UI, business logic, and data handling.
+- **S**ingle Responsibility: Clear separation of UI, business logic, and data handling using MVVM architecture.
 - **O**pen/Closed: Easy to extend features without touching core logic.
 - **L**iskov Substitution: Interfaces for repositories promote flexibility.
 - **I**nterface Segregation: Interfaces are minimal and focused.
