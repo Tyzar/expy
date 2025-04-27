@@ -5,8 +5,10 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -43,6 +45,8 @@ import com.nokotogi.android.expy.ui.components.topbars.MainTopBar
 import com.nokotogi.android.expy.ui.components.topbars.SelectionTopBar
 import com.nokotogi.android.expy.ui.routes.EditExpenseRoute
 import com.nokotogi.android.expy.ui.viewmodels.DeleteExpenseVm
+import com.nokotogi.android.expy.utils.formatLocalDate
+import com.nokotogi.android.expy.utils.fullDateTimeFormat
 import com.nokotogi.mantra.either.Either
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -164,40 +168,65 @@ fun ExpenseListScreen(
                     )
                 }
 
-                items(count = expenseListState.size, key = { expenseListState[it].id }) {
-                    val expense = expenseListState[it]
-                    val isSelected = expenseListVm.getSelection().contains(expense.id)
+                expenseListState.forEach { (dateGroup, expenses) ->
+                    stickyHeader {
+                        val isToday = LocalDate.now().isEqual(dateGroup)
+                        Box(
+                            modifier = Modifier
+                                .fillParentMaxWidth()
+                                .background(color = MaterialTheme.colorScheme.background)
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text(
+                                text = if (isToday) "Today" else formatLocalDate(
+                                    dateGroup,
+                                    fullDateTimeFormat
+                                )
+                            )
+                        }
+                    }
+                    items(count = expenses.size, key = { expenses[it].id }) {
+                        val expense = expenses[it]
+                        val isSelected = expenseListVm.getSelection().contains(expense.id)
 
-                    ExpenseItemView(
-                        modifier = Modifier
-                            .fillParentMaxWidth()
-                            .combinedClickable(onClick = {
+                        ExpenseItemView(
+                            modifier = Modifier
+                                .fillParentMaxWidth()
+                                .combinedClickable(onClick = {
+                                    if (expenseListVm
+                                            .getSelection()
+                                            .isNotEmpty()
+                                    ) {
+                                        expenseListVm.toggleSelectExpense(expense.id)
+                                        return@combinedClickable
+                                    }
+                                    rootNavController.navigate(EditExpenseRoute(expenseId = expense.id))
+                                }, onLongClick = {
+                                    if (expenseListVm
+                                            .getSelection()
+                                            .isNotEmpty()
+                                    ) {
+                                        return@combinedClickable
+                                    }
+
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    expenseListVm.toggleSelectExpense(expense.id)
+                                }),
+                            expenseName = expense.expenseName,
+                            amount = expense.amount,
+                            category = expense.category,
+                            inSelectMode = expenseListVm.getSelection().isNotEmpty(),
+                            isSelected = isSelected,
+                            onChecked = {
                                 if (expenseListVm
                                         .getSelection()
                                         .isNotEmpty()
                                 ) {
                                     expenseListVm.toggleSelectExpense(expense.id)
-                                    return@combinedClickable
                                 }
-                                rootNavController.navigate(EditExpenseRoute(expenseId = expense.id))
-                            }, onLongClick = {
-                                if (expenseListVm
-                                        .getSelection()
-                                        .isNotEmpty()
-                                ) {
-                                    return@combinedClickable
-                                }
-
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                expenseListVm.toggleSelectExpense(expense.id)
-                            }),
-                        expenseName = expense.expenseName,
-                        expenseAt = expense.expenseDate,
-                        amount = expense.amount,
-                        category = expense.category,
-                        inSelectMode = expenseListVm.getSelection().isNotEmpty(),
-                        isSelected = isSelected
-                    )
+                            }
+                        )
+                    }
                 }
             }
         }

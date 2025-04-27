@@ -5,19 +5,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nokotogi.android.expy.data.repositories.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class ExpenseListVm @Inject constructor(private val expenseRepository: ExpenseRepository) :
+class ExpenseListVm @Inject constructor(expenseRepository: ExpenseRepository) :
     ViewModel() {
 
     val expenseListState = expenseRepository.watchExpenseData()
+        .map { expenseList ->
+            expenseList.groupBy {
+                it.expenseDate
+            }.toSortedMap(compareByDescending { it })
+        }
+        .flowOn(Dispatchers.Default)
         .stateIn(
             viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            emptyList()
+            emptyMap()
         )
 
     private val mSelection = mutableStateListOf<Int>()

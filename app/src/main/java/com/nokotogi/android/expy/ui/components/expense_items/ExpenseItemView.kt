@@ -1,5 +1,6 @@
 package com.nokotogi.android.expy.ui.components.expense_items
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,19 +21,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nokotogi.android.expy.utils.formatCurrency
-import com.nokotogi.android.expy.utils.formatLocalDate
-import com.nokotogi.android.expy.utils.fullDateTimeFormat
-import java.time.LocalDate
 
 @Composable
 fun ExpenseItemView(
     modifier: Modifier = Modifier,
     expenseName: String,
     amount: Double,
-    expenseAt: LocalDate,
     category: String,
     inSelectMode: Boolean = false,
-    isSelected: Boolean = false
+    isSelected: Boolean = false,
+    onChecked: () -> Unit
 ) {
     Card(
         modifier = modifier, colors = CardDefaults.cardColors(
@@ -57,23 +55,23 @@ fun ExpenseItemView(
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = formatLocalDate(expenseAt, fullDateTimeFormat),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(
-                            alpha = 0.8f
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                shape = MaterialTheme.shapes.medium
+                            )
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = category,
+                            maxLines = 1,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = category,
-                        maxLines = 1,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                    }
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -81,7 +79,7 @@ fun ExpenseItemView(
                 Text(
                     text = "- ${formatCurrency(amount)}",
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.tertiary,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -89,7 +87,7 @@ fun ExpenseItemView(
                     Box(
                         contentAlignment = Alignment.CenterEnd
                     ) {
-                        Checkbox(checked = isSelected, onCheckedChange = {})
+                        Checkbox(checked = isSelected, onCheckedChange = { onChecked() })
                     }
             }
         }
