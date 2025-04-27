@@ -1,5 +1,6 @@
 package com.nokotogi.android.expy.ui.screens.expense_list
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,21 +15,36 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.nokotogi.android.expy.R
 import com.nokotogi.android.expy.ui.components.expense_items.ExpenseItemView
 import com.nokotogi.android.expy.ui.components.topbars.MainTopBar
 import com.nokotogi.android.expy.ui.routes.EditExpenseRoute
+import com.nokotogi.android.expy.ui.viewmodels.DeleteExpenseVm
+import com.nokotogi.mantra.either.Either
 import java.time.LocalDate
 import java.time.OffsetDateTime
 
 @Composable
-fun ExpenseListScreen(rootNavController: NavHostController) {
+fun ExpenseListScreen(
+    rootNavController: NavHostController,
+    expenseListVm: ExpenseListVm,
+    deleteExpenseVm: DeleteExpenseVm
+) {
+    val expenseListState by expenseListVm.expenseListState.collectAsStateWithLifecycle()
+    val deleteResultState by deleteExpenseVm.deleteResult.collectAsStateWithLifecycle(
+        initialValue = Either.Right(
+            ""
+        )
+    )
+
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
             MainTopBar(appName = stringResource(id = R.string.app_name))
@@ -68,14 +84,18 @@ fun ExpenseListScreen(rootNavController: NavHostController) {
                 )
             }
 
-            items(count = 15, key = { it }) {
+            items(count = expenseListState.size, key = { expenseListState[it].id }) {
+                val expense = expenseListState[it]
                 ExpenseItemView(
                     modifier = Modifier
-                        .fillParentMaxWidth(),
-                    expenseName = "Expense $it",
-                    expenseAt = LocalDate.now(),
-                    amount = 53000.0,
-                    category = "Transport"
+                        .fillParentMaxWidth()
+                        .combinedClickable(onClick = {
+                            rootNavController.navigate(EditExpenseRoute(expenseId = expense.id))
+                        }),
+                    expenseName = expense.expenseName,
+                    expenseAt = expense.expenseDate,
+                    amount = expense.amount,
+                    category = expense.category
                 )
             }
         }

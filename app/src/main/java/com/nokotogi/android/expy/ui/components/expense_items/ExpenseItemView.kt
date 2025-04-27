@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.nokotogi.android.expy.utils.formatLocalDate
 import com.nokotogi.android.expy.utils.fullDateTimeFormat
 import java.time.LocalDate
-import java.time.OffsetDateTime
 
 @Composable
 fun ExpenseItemView(

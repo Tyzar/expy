@@ -3,6 +3,7 @@ package com.nokotogi.android.expy.domain.repositories
 import com.nokotogi.android.expy.domain.models.Expense
 import com.nokotogi.android.expy.domain.errors.BaseError
 import com.nokotogi.mantra.either.Either
+import kotlinx.coroutines.flow.Flow
 
 sealed class ExpenseRepoError : BaseError {
     data object InsertError : ExpenseRepoError()
@@ -12,6 +13,7 @@ sealed class ExpenseRepoError : BaseError {
 }
 
 interface IExpenseRepository {
+    fun watchExpenseData(): Flow<List<Expense>>
     suspend fun insert(expense: Expense): Either<ExpenseRepoError, Unit>
     suspend fun update(expense: Expense): Either<ExpenseRepoError, Unit>
     suspend fun get(expenseId: Int): Expense?

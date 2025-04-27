@@ -27,7 +27,11 @@ fun NavGraphBuilder.rootNavGraph(navController: NavHostController) {
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None }) {
         composable<ExpenseListRoute> {
-            ExpenseListScreen(rootNavController = navController)
+            ExpenseListScreen(
+                rootNavController = navController,
+                hiltViewModel(),
+                hiltViewModel()
+            )
         }
 
         composable<EditExpenseRoute> { backStackEntry ->

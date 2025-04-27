@@ -252,8 +252,7 @@ fun EditExpenseScreen(
         ) {
             LabelTextField(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .fillMaxWidth(),
                 label = "Expense",
                 placeholder = "What it spent on",
                 keyboardActions = KeyboardActions(
@@ -274,8 +273,7 @@ fun EditExpenseScreen(
 
             LabelTextField(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .fillMaxWidth(),
                 label = "Amount",
                 placeholder = "How much",
                 prefixIcon = {
@@ -299,8 +297,7 @@ fun EditExpenseScreen(
 
             LabelTextField(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .fillMaxWidth(),
                 label = "Expense At",
                 placeholder = "Choose the datetime",
                 prefixIcon = {
@@ -331,13 +328,12 @@ fun EditExpenseScreen(
 
             LabelTextField(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .fillMaxWidth(),
                 label = "Category",
                 placeholder = "Add or select category",
                 suffixIcon = {
                     Icon(
-                        modifier = Modifier.size(32.dp),
+                        modifier = Modifier.size(24.dp),
                         painter = painterResource(id = R.drawable.ic_search),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)

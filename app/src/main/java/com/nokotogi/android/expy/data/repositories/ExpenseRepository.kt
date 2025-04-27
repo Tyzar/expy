@@ -8,11 +8,21 @@ import com.nokotogi.android.expy.domain.repositories.ExpenseRepoError
 import com.nokotogi.android.expy.domain.repositories.IExpenseRepository
 import com.nokotogi.mantra.either.Either
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ExpenseRepository @Inject constructor(appRoomDb: AppRoomDb) : IExpenseRepository {
     private val expenseDao = appRoomDb.expenseDao()
+    override fun watchExpenseData(): Flow<List<Expense>> {
+        return expenseDao.getAll().map { result ->
+            result.map {
+                it.toDomain()
+            }
+        }.flowOn(Dispatchers.IO)
+    }
 
     override suspend fun insert(expense: Expense): Either<ExpenseRepoError, Unit> =
         withContext(Dispatchers.IO) {

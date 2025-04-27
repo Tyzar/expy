@@ -4,10 +4,15 @@ import com.nokotogi.android.expy.domain.models.Expense
 import com.nokotogi.android.expy.domain.repositories.ExpenseRepoError
 import com.nokotogi.android.expy.domain.repositories.IExpenseRepository
 import com.nokotogi.mantra.either.Either
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import javax.inject.Inject
 
 class DummyExpenseRepo @Inject constructor() : IExpenseRepository {
+    override fun watchExpenseData(): Flow<List<Expense>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun insert(expense: Expense): Either<ExpenseRepoError, Unit> {
         return Either.Right(Unit)
     }

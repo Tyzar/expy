@@ -24,7 +24,7 @@ fun NavTopBar(onBack: () -> Unit, title: String, actions: (@Composable (() -> Un
         modifier = Modifier
             .fillMaxWidth()
             .systemBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onBack) {

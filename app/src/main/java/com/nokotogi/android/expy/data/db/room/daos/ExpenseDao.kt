@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.nokotogi.android.expy.data.db.room.entities.TExpense
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExpenseDao {
@@ -20,4 +21,7 @@ interface ExpenseDao {
 
     @Query("DELETE FROM expense WHERE id in (:expenseIds)")
     fun deleteBatch(expenseIds: List<Int>)
+
+    @Query("SELECT * FROM expense")
+    fun getAll(): Flow<List<TExpense>>
 }

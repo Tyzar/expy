@@ -10,7 +10,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import com.nokotogi.android.expy.utils.toEpochMillis
+import com.nokotogi.android.expy.utils.toEpochMillisUTC
 import com.nokotogi.android.expy.utils.toLocalDate
+import java.time.Instant
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,8 +24,8 @@ fun AppDatePickerDialog(
 ) {
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = if (initialDate == null)
-            toEpochMillis(LocalDate.now())
-        else toEpochMillis(
+            toEpochMillisUTC(LocalDate.now())
+        else toEpochMillisUTC(
             initialDate
         ),
         selectableDates = object : SelectableDates {

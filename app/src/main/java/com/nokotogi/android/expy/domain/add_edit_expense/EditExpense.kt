@@ -31,7 +31,7 @@ class EditExpense @Inject constructor(
             expenseDate = form.date!!,
             category = form.category
         )
-        return expenseRepo.insert(expense).mapLeft {
+        return expenseRepo.update(expense).mapLeft {
             SaveExpenseError.Other
         }
     }
