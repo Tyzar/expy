@@ -24,6 +24,7 @@ import com.nokotogi.android.expy.R
 import com.nokotogi.android.expy.ui.components.expense_items.ExpenseItemView
 import com.nokotogi.android.expy.ui.components.topbars.MainTopBar
 import com.nokotogi.android.expy.ui.routes.EditExpenseRoute
+import java.time.LocalDate
 import java.time.OffsetDateTime
 
 @Composable
@@ -72,7 +73,7 @@ fun ExpenseListScreen(rootNavController: NavHostController) {
                     modifier = Modifier
                         .fillParentMaxWidth(),
                     expenseName = "Expense $it",
-                    expenseAt = OffsetDateTime.now(),
+                    expenseAt = LocalDate.now(),
                     amount = 53000.0,
                     category = "Transport"
                 )

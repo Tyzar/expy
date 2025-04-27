@@ -139,7 +139,6 @@ fun ExpenseCategorySheet(
                         IconButton(
                             onClick = {
                                 onDeleteCategory(categories[it])
-                                onDismissRequest()
                             }) {
                             Icon(
                                 tint = MaterialTheme.colorScheme.onSurface,

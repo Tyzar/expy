@@ -16,7 +16,10 @@ class CategoryVm @Inject constructor(private val categoryRepo: ICategoryReposito
     ViewModel() {
 
     private val mCategories = mutableStateListOf<ExpenseCategory>()
-    val categories = mCategories.toList()
+
+    fun getCategories(): List<ExpenseCategory> {
+        return mCategories.toList()
+    }
 
     fun initialize() {
         viewModelScope.launch {
@@ -27,7 +30,7 @@ class CategoryVm @Inject constructor(private val categoryRepo: ICategoryReposito
     fun search(keyword: String) {
         viewModelScope.launch {
             when (val result = categoryRepo.searchByKeyword(keyword)) {
-                is Either.Left -> Log.d("Expy", "Failed to search category")
+                is Either.Left -> Log.d("ExpyDebug", "Failed to search category")
                 is Either.Right -> {
                     mCategories.clear()
                     mCategories.addAll(result.rightValue)
@@ -39,7 +42,7 @@ class CategoryVm @Inject constructor(private val categoryRepo: ICategoryReposito
     fun delete(categoryId: Int) {
         viewModelScope.launch {
             when (categoryRepo.delete(categoryId)) {
-                is Either.Left -> Log.d("Expy", "Failed to delete category")
+                is Either.Left -> Log.d("ExpyDebug", "Failed to delete category")
                 is Either.Right -> mCategories.removeIf {
                     it.id == categoryId
                 }

@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
+import java.time.LocalDate
 import javax.inject.Inject
 
 enum class ScreenInitializedState {
@@ -42,10 +42,13 @@ class AddEditExpenseVm @Inject constructor(
     val formState = mFormState.asStateFlow()
 
     private val mInvalidInfo = mutableStateMapOf<FormLabel, FormInvalid>()
-    val invalidInfo = mInvalidInfo.toMap()
 
     private val mSaveResultEvent = MutableSharedFlow<Either<String, String>>()
     val saveResultEvent = mSaveResultEvent.asSharedFlow()
+
+    fun getInvalidInfo(): Map<FormLabel, FormInvalid> {
+        return mInvalidInfo.toMap()
+    }
 
     fun getDetail(expenseId: Int) {
         this.expenseId = expenseId
@@ -85,7 +88,7 @@ class AddEditExpenseVm @Inject constructor(
         }
     }
 
-    fun onDateChanged(date: OffsetDateTime) {
+    fun onDateChanged(date: LocalDate) {
         mFormState.value = mFormState.value.copy(
             date = date
         )

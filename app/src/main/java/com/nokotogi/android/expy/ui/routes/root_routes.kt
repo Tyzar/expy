@@ -36,6 +36,7 @@ fun NavGraphBuilder.rootNavGraph(navController: NavHostController) {
                 rootNavController = navController,
                 expenseId = expenseId,
                 hiltViewModel(),
+                hiltViewModel(),
                 hiltViewModel()
             )
         }

@@ -1,14 +1,21 @@
 package com.nokotogi.android.expy.utils
 
-import java.time.OffsetDateTime
+import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-const val fullDateTimeFormat = "EEEE, dd MMM yyyy, HH:mm"
+const val fullDateTimeFormat = "EEEE, dd MMMM yyyy"
 
-fun formatToSystemTimeZone(dateTime: OffsetDateTime, format: String): String {
-    val systemZoneOffset = OffsetDateTime.now(ZoneId.systemDefault()).offset
-    val off = dateTime.toInstant().atOffset(systemZoneOffset)
+fun formatLocalDate(localDate: LocalDate, format: String): String {
     val formatter = DateTimeFormatter.ofPattern(format)
-    return formatter.format(off)
+    return formatter.format(localDate)
+}
+
+fun toEpochMillis(localDate: LocalDate): Long {
+    return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+}
+
+fun toLocalDate(utcMillis: Long): LocalDate {
+    return Instant.ofEpochMilli(utcMillis).atZone(ZoneId.systemDefault()).toLocalDate()
 }

@@ -1,5 +1,6 @@
 package com.nokotogi.android.expy.ui.screens.edit_expense
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -39,13 +40,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.nokotogi.android.expy.R
+import com.nokotogi.android.expy.domain.add_edit_expense.FormInvalid
+import com.nokotogi.android.expy.domain.add_edit_expense.FormLabel
+import com.nokotogi.android.expy.ui.components.dialogs.AppDatePickerDialog
 import com.nokotogi.android.expy.ui.components.dialogs.DeleteConfirmDialog
 import com.nokotogi.android.expy.ui.components.dialogs.ExpenseCategorySheet
 import com.nokotogi.android.expy.ui.components.textfields.LabelTextField
 import com.nokotogi.android.expy.ui.components.topbars.NavTopBar
 import com.nokotogi.android.expy.ui.routes.ExpenseListRoute
 import com.nokotogi.android.expy.ui.viewmodels.DeleteExpenseVm
-import com.nokotogi.android.expy.utils.formatToSystemTimeZone
+import com.nokotogi.android.expy.utils.formatLocalDate
 import com.nokotogi.android.expy.utils.fullDateTimeFormat
 import com.nokotogi.mantra.either.Either
 import kotlinx.coroutines.launch
@@ -79,6 +83,9 @@ fun EditExpenseScreen(
     var showDeleteConfirmDialog by remember {
         mutableStateOf(false)
     }
+    var showDatePicker by remember {
+        mutableStateOf(false)
+    }
     var showCategorySheet by remember {
         mutableStateOf(false)
     }
@@ -110,7 +117,7 @@ fun EditExpenseScreen(
             is Either.Left -> {
                 snackBarHostState.showSnackbar(
                     message = (saveResultState as Either.Left<String, String>).leftValue,
-                    actionLabel = "Oke",
+                    actionLabel = "Ok",
                     withDismissAction = true,
                 )
             }
@@ -123,7 +130,7 @@ fun EditExpenseScreen(
                 launch {
                     snackBarHostState.showSnackbar(
                         message = (saveResultState as Either.Right<String, String>).rightValue,
-                        actionLabel = "Oke",
+                        actionLabel = "Ok",
                         withDismissAction = true
                     )
                 }
@@ -139,7 +146,7 @@ fun EditExpenseScreen(
             is Either.Left -> {
                 snackBarHostState.showSnackbar(
                     message = (saveResultState as Either.Left<String, String>).leftValue,
-                    actionLabel = "Oke",
+                    actionLabel = "Ok",
                     withDismissAction = true,
                 )
             }
@@ -152,7 +159,7 @@ fun EditExpenseScreen(
                 launch {
                     snackBarHostState.showSnackbar(
                         message = (saveResultState as Either.Right<String, String>).rightValue,
-                        actionLabel = "Oke",
+                        actionLabel = "Ok",
                         withDismissAction = true
                     )
                 }
@@ -255,6 +262,10 @@ fun EditExpenseScreen(
                     }
                 ),
                 value = formState.expenseName ?: "",
+                errorInfo = when (addEditExpenseVm.getInvalidInfo()[FormLabel.ExpenseName]) {
+                    FormInvalid.FieldEmpty -> "Expense name must be filled"
+                    else -> null
+                },
                 onValueChange = {
                     addEditExpenseVm.onExpenseNameChanged(it)
                 })
@@ -275,6 +286,11 @@ fun EditExpenseScreen(
                     focusManager.clearFocus()
                 }),
                 value = formState.amount ?: "",
+                errorInfo = when (addEditExpenseVm.getInvalidInfo()[FormLabel.Amount]) {
+                    FormInvalid.FieldEmpty -> "Amount must be filled"
+                    FormInvalid.AmountNotNumber -> "Amount must be in numeric"
+                    else -> null
+                },
                 onValueChange = {
                     addEditExpenseVm.onAmountChanged(it)
                 })
@@ -296,13 +312,18 @@ fun EditExpenseScreen(
                     )
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                value = if (formState.date == null) "" else formatToSystemTimeZone(
+                value = if (formState.date == null) "" else formatLocalDate(
                     formState.date!!,
                     fullDateTimeFormat
                 ),
+                errorInfo = when (addEditExpenseVm.getInvalidInfo()[FormLabel.ExpenseDate]) {
+                    FormInvalid.FieldEmpty -> "Expense date must be filled"
+                    FormInvalid.ExpenseDateInFuture -> "Future date is not allowed"
+                    else -> null
+                },
                 readOnly = true,
                 onTap = {
-                    //TODO: show datetime picker
+                    showDatePicker = true
                 },
                 onValueChange = {})
 
@@ -324,6 +345,10 @@ fun EditExpenseScreen(
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 value = formState.category ?: "",
+                errorInfo = when (addEditExpenseVm.getInvalidInfo()[FormLabel.Category]) {
+                    FormInvalid.FieldEmpty -> "Expense category must be filled"
+                    else -> null
+                },
                 readOnly = true,
                 onTap = {
                     showCategorySheet = true
@@ -335,20 +360,31 @@ fun EditExpenseScreen(
     if (showDeleteConfirmDialog) {
         DeleteConfirmDialog(
             title = "Delete expense?",
-            content = "Expense ... will be deleted.",
+            content = "This expense will be deleted.",
             onConfirm = {
                 showDeleteConfirmDialog = false
-                //TODO: delete expense
+                if (expenseId != null)
+                    deleteExpenseVm.delete(listOf(expenseId))
             }, onCancel = {
                 showDeleteConfirmDialog = false
             })
     }
 
+    if (showDatePicker) {
+        AppDatePickerDialog(
+            initialDate = formState.date,
+            onSelected = {
+                addEditExpenseVm.onDateChanged(it)
+            },
+            onDismissRequest = { showDatePicker = false })
+    }
+
     if (showCategorySheet) {
         ExpenseCategorySheet(
             modifier = Modifier.fillMaxWidth(),
-            categories = categoryVm.categories,
+            categories = categoryVm.getCategories(),
             onSelected = {
+                Log.d("ExpyDebug", "Selected category: ${it.desc}")
                 addEditExpenseVm.onCategoryChanged(it.desc)
             },
             onSearchChanged = {

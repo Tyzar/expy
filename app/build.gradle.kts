@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.dev.ksp)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.androidx.room)
 }
 
 android {
@@ -51,6 +52,10 @@ android {
         kotlinCompilerExtensionVersion = "1.5.3"
     }
 
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -66,7 +71,6 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.mantra.either)
-
 
     //compose
     val composeBom = platform(libs.androidx.compose.bom)
@@ -86,6 +90,12 @@ dependencies {
     implementation(libs.androidx.hilt.nav.compose)
     ksp(libs.dagger.hilt.compiler)
     ksp(libs.androidx.hilt.compiler)
+
+    //room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    annotationProcessor(libs.room.compiler)
+    ksp(libs.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

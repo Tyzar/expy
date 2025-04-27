@@ -1,6 +1,6 @@
 package com.nokotogi.android.expy.domain.add_edit_expense
 
-import java.time.OffsetDateTime
+import java.time.LocalDate
 
 enum class FormInvalid {
     FieldEmpty,
@@ -18,13 +18,9 @@ enum class FormLabel {
 data class EditExpenseForm(
     val expenseName: String? = null,
     val amount: String? = null,
-    val date: OffsetDateTime? = null,
+    val date: LocalDate? = null,
     val category: String? = null
 ) {
-    fun isFormEmpty(): Boolean {
-        return expenseName == null && amount == null && date == null && category == null
-    }
-
     /** Validate expense name.
      * Constraints: - Required
      *              - Cannot empty
@@ -56,7 +52,7 @@ data class EditExpenseForm(
     fun validateExpenseDate(): FormInvalid? {
         if (date == null)
             return FormInvalid.FieldEmpty
-        if (date.isAfter(OffsetDateTime.now())) {
+        if (date.isAfter(LocalDate.now())) {
             return FormInvalid.ExpenseDateInFuture
         }
 
