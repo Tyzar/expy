@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.nokotogi.android.expy.utils.formatCurrency
 import com.nokotogi.android.expy.utils.formatLocalDate
 import com.nokotogi.android.expy.utils.fullDateTimeFormat
 import java.time.LocalDate
@@ -35,7 +36,8 @@ fun ExpenseItemView(
 ) {
     Card(
         modifier = modifier, colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceContainerHighest
+            else MaterialTheme.colorScheme.surfaceContainerHigh
         ), shape = MaterialTheme.shapes.medium
     ) {
         Column(
@@ -43,16 +45,6 @@ fun ExpenseItemView(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            if (inSelectMode)
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    contentAlignment = Alignment.CenterEnd
-                ) {
-                    Checkbox(checked = isSelected, onCheckedChange = {})
-                }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -87,11 +79,18 @@ fun ExpenseItemView(
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Text(
-                    text = "-Rp$amount",
+                    text = "- ${formatCurrency(amount)}",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
+
+                if (inSelectMode)
+                    Box(
+                        contentAlignment = Alignment.CenterEnd
+                    ) {
+                        Checkbox(checked = isSelected, onCheckedChange = {})
+                    }
             }
         }
     }

@@ -65,11 +65,7 @@ fun EditExpenseScreen(
     /*** ViewModel states */
     val initState by addEditExpenseVm.initState.collectAsStateWithLifecycle()
     val formState by addEditExpenseVm.formState.collectAsStateWithLifecycle()
-    val deleteResultState by deleteExpenseVm.deleteResult.collectAsStateWithLifecycle(
-        initialValue = Either.Right(
-            ""
-        )
-    )
+
     val saveResultState by addEditExpenseVm.saveResultEvent.collectAsStateWithLifecycle(
         initialValue = Either.Right(
             ""
@@ -127,44 +123,28 @@ fun EditExpenseScreen(
                     return@LaunchedEffect
                 }
 
-                launch {
-                    snackBarHostState.showSnackbar(
-                        message = (saveResultState as Either.Right<String, String>).rightValue,
-                        actionLabel = "Ok",
-                        withDismissAction = true
-                    )
-                }
-
                 rootNavController.popBackStack()
             }
         }
     }
 
     /*** Delete result handler */
-    LaunchedEffect(deleteResultState) {
-        when (deleteResultState) {
-            is Either.Left -> {
-                snackBarHostState.showSnackbar(
-                    message = (saveResultState as Either.Left<String, String>).leftValue,
-                    actionLabel = "Ok",
-                    withDismissAction = true,
-                )
-            }
-
-            is Either.Right -> {
-                if ((saveResultState as Either.Right<String, String>).rightValue.isEmpty()) {
-                    return@LaunchedEffect
-                }
-
-                launch {
+    LaunchedEffect(Unit) {
+        deleteExpenseVm.deleteResult.collect {
+            when (it) {
+                is Either.Left -> {
                     snackBarHostState.showSnackbar(
-                        message = (saveResultState as Either.Right<String, String>).rightValue,
+                        message = (saveResultState as Either.Left<String, String>).leftValue,
                         actionLabel = "Ok",
-                        withDismissAction = true
+                        withDismissAction = true,
                     )
                 }
 
-                rootNavController.popBackStack()
+                is Either.Right -> {
+                    if (it.rightValue.isNotEmpty()) {
+                        rootNavController.popBackStack()
+                    }
+                }
             }
         }
     }
@@ -380,7 +360,6 @@ fun EditExpenseScreen(
             modifier = Modifier.fillMaxWidth(),
             categories = categoryVm.getCategories(),
             onSelected = {
-                Log.d("ExpyDebug", "Selected category: ${it.desc}")
                 addEditExpenseVm.onCategoryChanged(it.desc)
             },
             onSearchChanged = {

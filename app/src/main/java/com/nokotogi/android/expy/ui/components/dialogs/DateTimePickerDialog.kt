@@ -44,7 +44,6 @@ fun AppDatePickerDialog(
     DatePickerDialog(onDismissRequest = onDismissRequest, confirmButton = {
         TextButton(onClick = {
             if (datePickerState.selectedDateMillis != null) {
-                Log.d("ExpyDebug", "Selected date: ${datePickerState.selectedDateMillis}")
                 val date = toLocalDate(datePickerState.selectedDateMillis!!)
                 onSelected(date)
                 onDismissRequest()
