@@ -39,7 +39,7 @@ fun SelectionTopBar(onCancel: () -> Unit, description: String, action: @Composab
         Text(
             modifier = Modifier.weight(1f),
             text = description,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
         action()

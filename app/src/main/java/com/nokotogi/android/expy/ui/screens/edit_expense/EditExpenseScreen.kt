@@ -257,7 +257,7 @@ fun EditExpenseScreen(
                 label = "Amount",
                 placeholder = "How much",
                 prefixIcon = {
-                    Text(text = "Rp", style = MaterialTheme.typography.bodyMedium)
+                    Text(text = "Rp", style = MaterialTheme.typography.bodyLarge)
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 keyboardActions = KeyboardActions(onDone = {

@@ -42,7 +42,7 @@ fun LabelTextField(
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium.copy(
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge.copy(
         color = MaterialTheme.colorScheme.onSurface
     ),
     onValueChange: (String) -> Unit
@@ -62,7 +62,7 @@ fun LabelTextField(
 
     Column(modifier = modifier) {
         if (label != null) {
-            Text(text = label, style = MaterialTheme.typography.bodyMedium)
+            Text(text = label, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
         }
         BasicTextField(
@@ -95,7 +95,7 @@ fun LabelTextField(
                     if (placeholder != null && value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            style = MaterialTheme.typography.bodyMedium.copy(
+                            style = MaterialTheme.typography.bodyLarge.copy(
                                 color = MaterialTheme.colorScheme.onSurface.copy(
                                     alpha = 0.8f
                                 )

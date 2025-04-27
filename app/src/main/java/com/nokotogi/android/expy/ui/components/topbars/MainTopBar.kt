@@ -20,6 +20,10 @@ fun MainTopBar(appName: String) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = appName, style = MaterialTheme.typography.titleLarge)
+        Text(
+            text = appName,
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
